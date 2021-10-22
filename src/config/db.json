@@ -1,10 +1,10 @@
 {
   "name": "period",
   "database": "period",
-  "port": 3306,
   "username": "root",
   "password": "root",
   "connection": {
+    "port": 3306,
     "host": "localhost",
     "dialect": "mysql",
     "pool": {

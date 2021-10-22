@@ -12,7 +12,7 @@ import dateformat from 'dateformat'
  * @param days
  * @returns {Date}
  */
-const add_date = (date,days) => {
+const add_date = (date, days) => {
     let d = new Date(date);
     d.setDate(d.getDate() + days);
     return d
@@ -47,21 +47,35 @@ module.exports = app => {
         try {
             // let search_start = add_date(req.params.sel_date,-30).getTime()
             // let search_end = add_date(req.params.sel_date,30).getTime()
-            let search_start = dateformat(first_day(req.params.sel_date),'yyyymmdd')
+            let search_start = dateformat(first_day(req.params.sel_date), 'yyyymmdd')
             console.log('>>>>>>>>>>>>>>>>find-all search_start ', search_start)
 
-            let search_end = dateformat(last_day(req.params.sel_date),'yyyymmdd')
+            let search_end = dateformat(last_day(req.params.sel_date), 'yyyymmdd')
             console.log('>>>>>>>>>>>>>>>>find-all search_end ', search_end)
 
 
             let db_periods = await Periods.findAll({
                 where: {
-                    id: {
-                        [Op.and]: {
-                            [Op.gte]: search_start,
-                            [Op.lte]: search_end
+                    [Op.and]: [
+                        {
+                            id: {
+                                [Op.and]: {
+                                    [Op.gte]: search_start,
+                                    [Op.lte]: search_end
+                                }
+                            }
+                        },
+                        {
+                            [Op.or]: [
+                                {
+                                    is_start: true
+                                },
+                                {
+                                    is_end: true
+                                }
+                            ]
                         }
-                    }
+                    ]
                 },
                 order: [
                     ['id', 'asc']
